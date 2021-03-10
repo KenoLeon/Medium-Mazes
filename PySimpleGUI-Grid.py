@@ -56,7 +56,7 @@ _VARS['window'] = sg.Window('GridMaker',
                             layout, resizable=True, finalize=True)
 _VARS['canvas'] = _VARS['window']['canvas']
 drawGrid()
-# drawCell(0, 0)
+drawCell(40, 40)
 # placeCells()
 
 
