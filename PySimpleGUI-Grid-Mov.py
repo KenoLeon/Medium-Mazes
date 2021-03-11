@@ -3,7 +3,8 @@ import numpy as np
 
 AppFont = 'Any 16'
 sg.theme('DarkGrey5')
-_VARS = {'cellCount': 10, 'gridSize': 400, 'canvas': False, 'window': False,  'playerPos': [40, 40]}
+_VARS = {'cellCount': 10, 'gridSize': 400, 'canvas': False, 'window': False,  
+         'playerPos': [40, 40]}
 cellMAP = np.random.randint(2, size=(_VARS['cellCount'], _VARS['cellCount']))
 cellSize = _VARS['gridSize']/_VARS['cellCount']
 
