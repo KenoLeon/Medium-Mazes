@@ -3,22 +3,11 @@ import numpy as np
 
 AppFont = 'Any 16'
 sg.theme('DarkGrey5')
-_VARS = {'cellCount': 10, 'gridSize': 400, 'canvas': False, 'window': False}
+_VARS = {'cellCount': 10, 'gridSize': 400, 'canvas': False, 'window': False,  'playerPos': [40, 40]}
 cellMAP = np.random.randint(2, size=(_VARS['cellCount'], _VARS['cellCount']))
 cellSize = _VARS['gridSize']/_VARS['cellCount']
 
-# [[1 0 1 0 1 0 1 1]
-#  [0 1 0 0 0 0 0 1]
-#  [1 0 0 0 0 1 0 0]
-#  [0 1 1 0 1 1 0 1]
-#  [0 0 1 1 0 0 0 0]
-#  [0 0 1 0 1 1 1 1]
-#  [1 1 0 1 0 0 1 0]
-#  [1 1 0 1 0 0 1 0]]
-
-print(cellMAP)
 # METHODS:
-
 
 def drawGrid():
     cells = _VARS['cellCount']
@@ -56,7 +45,7 @@ _VARS['window'] = sg.Window('GridMaker',
                             layout, resizable=True, finalize=True, return_keyboard_events=True)
 _VARS['canvas'] = _VARS['window']['canvas']
 drawGrid()
-drawCell(40, 40)
+drawCell(_VARS['playerPos'][0], _VARS['playerPos'][1])
 # placeCells()
 
 
@@ -64,37 +53,24 @@ while True:             # Event Loop
     event, values = _VARS['window'].read()
     if event in (None, 'Exit'):
         break
-    if callable(event):
-        event()
+    # Filter key press
+    if len(event) == 1:
+        if ord(event) == 63232: #UP
+            print('UP')
+            _VARS['playerPos'][1] = _VARS['playerPos'][1] - 40 
+        elif ord(event) == 63233: #DOWN
+            print('DOWN')
+            _VARS['playerPos'][1] = _VARS['playerPos'][1] + 40 
+        elif ord(event) == 63234: #LEFT
+            print('LEFT')
+            _VARS['playerPos'][0] = _VARS['playerPos'][0] - 40 
+        elif ord(event) == 63235: #RIGHT
+            print('RIGHT')
+            _VARS['playerPos'][0] = _VARS['playerPos'][0] + 40 
+
+    # Clear canvas, draw grid and cells
+    _VARS['canvas'].TKCanvas.delete("all")
+    drawGrid()
+    drawCell(_VARS['playerPos'][0], _VARS['playerPos'][1])
+
 _VARS['window'].close()
-
-
-
-
-
-# window = sg.Window("Realtime Keyboard Test", layout, return_keyboard_events=True,
-#                    use_default_focus=False)
-
-# while True:
-#     event, values = window.read(timeout=0)
-
-#     if event == "OK":
-#         print(event, values, "exiting")
-#         break
-#     if event is not sg.TIMEOUT_KEY:
-#         if len(event) == 1:
-#             if ord(event) == 63232:
-#                 print('UP')
-#             elif ord(event) == 63233:
-#                 print('DOWN')
-#             elif ord(event) == 63234:
-#                 print('LEFT')
-#             elif ord(event) == 63235:
-#                 print('RIGHT')        
-#             # print('%s - %s' % (event, ord(event)))
-#         else:
-#             print(event)
-#     elif event == sg.WIN_CLOSED:
-#         break
-
-# window.close()
