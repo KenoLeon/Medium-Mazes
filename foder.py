@@ -33,14 +33,14 @@ while True:
         if event in ("OK", None):
             print(event, "exiting")
             break
-        if event.startswith('Up'):
-            print('Up')
-        elif event.startswith('Down'):
-            print('Down')
-        elif event.startswith('Right'):
-            print('Right')
-        elif event.startswith('Left'):
-            print('Left')        
+        if event.startswith('Up') or ord(event) == 63232:
+            print('UP')
+        elif event.startswith('Down') or ord(event) == 63233:
+            print('DOWN')
+        elif event.startswith('Left') or ord(event) == 63234:
+            print('LEFT')
+        elif event.startswith('Right') or ord(event) == 63235:
+            print('RIGHT')        
 
 
 window.close()
