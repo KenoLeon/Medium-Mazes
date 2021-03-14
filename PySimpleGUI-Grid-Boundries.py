@@ -3,12 +3,13 @@ import numpy as np
 
 AppFont = 'Any 16'
 sg.theme('DarkGrey5')
-_VARS = {'cellCount': 10, 'gridSize': 400, 'canvas': False, 'window': False,  
+_VARS = {'cellCount': 10, 'gridSize': 400, 'canvas': False, 'window': False,
          'playerPos': [40, 40]}
 cellMAP = np.random.randint(2, size=(_VARS['cellCount'], _VARS['cellCount']))
 cellSize = _VARS['gridSize']/_VARS['cellCount']
 
 # METHODS:
+
 
 def drawGrid():
     cells = _VARS['cellCount']
@@ -42,8 +43,8 @@ layout = [[sg.Canvas(size=(_VARS['gridSize'], _VARS['gridSize']),
                      key='canvas')],
           [sg.Exit(font=AppFont)]]
 
-_VARS['window'] = sg.Window('GridMaker',
-                            layout, resizable=True, finalize=True, return_keyboard_events=True)
+_VARS['window'] = sg.Window('GridMaker', layout, resizable=True, finalize=True,
+                            return_keyboard_events=True)
 _VARS['canvas'] = _VARS['window']['canvas']
 drawGrid()
 drawCell(_VARS['playerPos'][0], _VARS['playerPos'][1])
@@ -56,18 +57,31 @@ while True:             # Event Loop
         break
     # Filter key press
     if len(event) == 1:
-        if ord(event) == 63232: #UP
+        if ord(event) == 63232:  # UP
             print('UP')
-            _VARS['playerPos'][1] = _VARS['playerPos'][1] - 40 
-        elif ord(event) == 63233: #DOWN
+            if (_VARS['playerPos'][1] - 40 >= 0):
+                _VARS['playerPos'][1] = _VARS['playerPos'][1] - 40
+            else:
+                print('WALL')
+        elif ord(event) == 63233:  # DOWN
             print('DOWN')
-            _VARS['playerPos'][1] = _VARS['playerPos'][1] + 40 
-        elif ord(event) == 63234: #LEFT
+            if (_VARS['playerPos'][1] + 40 < 400):
+                _VARS['playerPos'][1] = _VARS['playerPos'][1] + 40
+            else:
+                print('WALL')
+        elif ord(event) == 63234:  # LEFT
             print('LEFT')
-            _VARS['playerPos'][0] = _VARS['playerPos'][0] - 40 
-        elif ord(event) == 63235: #RIGHT
+            if (_VARS['playerPos'][0] - 40 >= 0):
+                _VARS['playerPos'][0] = _VARS['playerPos'][0] - 40
+            else:
+                print('WALL')
+        elif ord(event) == 63235:  # RIGHT
             print('RIGHT')
-            _VARS['playerPos'][0] = _VARS['playerPos'][0] + 40 
+            if (_VARS['playerPos'][0] + 40 < 400):
+                _VARS['playerPos'][0] = _VARS['playerPos'][0] + 40
+            else:
+                print('WALL')
+    print(_VARS['playerPos'])
 
     # Clear canvas, draw grid and cells
     _VARS['canvas'].TKCanvas.delete("all")
