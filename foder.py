@@ -4,43 +4,38 @@ import PySimpleGUI as sg
 
 # Recipe for getting keys, one at a time as they are released
 # If want to use the space bar, then be sure and disable the "default focus"
-
+AppFont = 'Any 16'
 layout = [[sg.Text("Press a key or scroll mouse")],
           [sg.Text("", size=(18, 1), key='text')],
-          [sg.Button("OK", key='OK')]]
+          [sg.Exit(font=AppFont)]]
 
 window = sg.Window("Keyboard Test", layout,
                    return_keyboard_events=True, use_default_focus=False)
 
-# ---===--- Loop taking in user input --- #
-# while True:
-#     event, values = window.read()
-#     text_elem = window['text']
-#     if event in ("OK", None):
-#         print(event, "exiting")
-#         break
-#     if len(event) == 1:
-#         text_elem.update(value='%s - %s' % (event, ord(event)))
-#     if event is not None:
-#         text_elem.update(event)
-#         print(event)
-
 
 while True:
     event, values = window.read()
-    if event is not None:
-        print(event)
-        if event in ("OK", None):
-            print(event, "exiting")
-            break
-        if event.startswith('Up') or ord(event) == 63232:
+    if event in (None, 'Exit'):
+        break
+    # Filter key press OSX :
+    if len(event) == 1:
+        if ord(event) == 63232: #UP
             print('UP')
-        elif event.startswith('Down') or ord(event) == 63233:
+        elif ord(event) == 63233: #DOWN
             print('DOWN')
-        elif event.startswith('Left') or ord(event) == 63234:
+        elif ord(event) == 63234: #LEFT
             print('LEFT')
-        elif event.startswith('Right') or ord(event) == 63235:
+        elif ord(event) == 63235: #RIGHT
+            print('RIGHT')
+    # Filter key press Windows :
+    else:
+        if event.startswith('Up'):
+            print('UP')
+        elif event.startswith('Down'):
+            print('DOWN')
+        elif event.startswith('Left'):
+            print('LEFT')
+        elif event.startswith('Right'):
             print('RIGHT')        
-
 
 window.close()
