@@ -6,6 +6,7 @@
 #   Fix offset smaller map
 #   Back propagate key capture fix:
     
-    # mov
-    # boundries
+    # mov XXX
+    # boundries XXX
+    # Add moveplayer method
 

@@ -37,6 +37,29 @@ def placeCells():
                 drawCell((cellSize*row), (cellSize*column))
 
 
+def checkEvents(event):
+    if len(event) == 1:
+        if ord(event) == 63232:  # UP
+            move = 'Up'
+        elif ord(event) == 63233:  # DOWN
+            move = 'Down'
+        elif ord(event) == 63234:  # LEFT
+            move = 'Left'
+        elif ord(event) == 63235:  # RIGHT
+            move = 'Right'
+    # Filter key press Windows :
+    else:
+        if event.startswith('Up'):
+            move = 'Up'
+        elif event.startswith('Down'):
+            move = 'Down'
+        elif event.startswith('Left'):
+            move = 'Left'
+        elif event.startswith('Right'):
+            move = 'Right'
+    return move
+
+
 # INIT :
 layout = [[sg.Canvas(size=(_VARS['gridSize'], _VARS['gridSize']),
                      background_color='white',
@@ -56,32 +79,18 @@ while True:             # Event Loop
     if event in (None, 'Exit'):
         break
     # Filter key press
-    if len(event) == 1:
-        if ord(event) == 63232:  # UP
-            print('UP')
-            if (_VARS['playerPos'][1] - 40 >= 0):
-                _VARS['playerPos'][1] = _VARS['playerPos'][1] - 40
-            else:
-                print('WALL')
-        elif ord(event) == 63233:  # DOWN
-            print('DOWN')
-            if (_VARS['playerPos'][1] + 40 < 400):
-                _VARS['playerPos'][1] = _VARS['playerPos'][1] + 40
-            else:
-                print('WALL')
-        elif ord(event) == 63234:  # LEFT
-            print('LEFT')
-            if (_VARS['playerPos'][0] - 40 >= 0):
-                _VARS['playerPos'][0] = _VARS['playerPos'][0] - 40
-            else:
-                print('WALL')
-        elif ord(event) == 63235:  # RIGHT
-            print('RIGHT')
-            if (_VARS['playerPos'][0] + 40 < 400):
-                _VARS['playerPos'][0] = _VARS['playerPos'][0] + 40
-            else:
-                print('WALL')
-    print(_VARS['playerPos'])
+    if checkEvents(event) == 'Up':
+        if (_VARS['playerPos'][1] - 40 >= 0):
+            _VARS['playerPos'][1] = _VARS['playerPos'][1] - 40
+    elif checkEvents(event) == 'Down':
+        if (_VARS['playerPos'][1] + 40 < 400):        
+            _VARS['playerPos'][1] = _VARS['playerPos'][1] + 40
+    elif checkEvents(event) == 'Left':
+        if (_VARS['playerPos'][0] - 40 >= 0):
+            _VARS['playerPos'][0] = _VARS['playerPos'][0] - 40
+    elif checkEvents(event) == 'Right':
+        if (_VARS['playerPos'][0] + 40 < 400):
+            _VARS['playerPos'][0] = _VARS['playerPos'][0] + 40
 
     # Clear canvas, draw grid and cells
     _VARS['canvas'].TKCanvas.delete("all")
