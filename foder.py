@@ -1,20 +1,50 @@
-#!/usr/bin/env python
-# import sys
 import PySimpleGUI as sg
-
-# Recipe for getting keys, one at a time as they are released
-# If want to use the space bar, then be sure and disable the "default focus"
+import numpy as np
 
 AppFont = 'Any 16'
-layout = [[sg.Text("Press a key or scroll mouse")],
-          [sg.Text("", size=(18, 1), key='text')],
-          [sg.Exit(font=AppFont)]]
+sg.theme('DarkGrey5')
+_VARS = {'cellCount': 10, 'gridSize': 400, 'canvas': False, 'window': False,
+         'playerPos': [0, 0]}
+# cellMAP = np.random.randint(2, size=(_VARS['cellCount'], _VARS['cellCount']))
+cellSize = _VARS['gridSize']/_VARS['cellCount']
 
-window = sg.Window("Keyboard Test", layout,
-                   return_keyboard_events=True, use_default_focus=False)
+cellMAP = np.array([[0, 0, 0, 1, 0, 0],
+                    [0, 0, 0, 1, 0, 0],
+                    [0, 0, 0, 1, 0, 0],
+                    [0, 0, 0, 1, 0, 0],
+                    [0, 0, 0, 1, 0, 0],
+                    [0, 0, 0, 1, 0, 0]])
+
+# METHODS:
+
+def drawGrid():
+    cells = _VARS['cellCount']
+    _VARS['canvas'].TKCanvas.create_rectangle(
+        1, 1, _VARS['gridSize'], _VARS['gridSize'], outline='BLACK', width=1)
+    for x in range(cells):
+        _VARS['canvas'].TKCanvas.create_line(
+            ((cellSize * x), 0), ((cellSize * x), _VARS['gridSize']),
+            fill='BLACK', width=1)
+        _VARS['canvas'].TKCanvas.create_line(
+            (0, (cellSize * x)), (_VARS['gridSize'], (cellSize * x)),
+            fill='BLACK', width=1)
+
+
+def drawCell(x, y):
+    _VARS['canvas'].TKCanvas.create_rectangle(
+        x, y, x + cellSize, y + cellSize,
+        outline='BLACK', fill='GREY', width=1)
+
+
+def placeCells():
+    for row in range(cellMAP.shape[0]):
+        for column in range(cellMAP.shape[1]):
+            if(cellMAP[column][row] == 1):
+                drawCell((cellSize*row), (cellSize*column))
 
 
 def checkEvents(event):
+    move = ''
     if len(event) == 1:
         if ord(event) == 63232:  # UP
             move = 'Up'
@@ -37,12 +67,60 @@ def checkEvents(event):
     return move
 
 
-while True:
-    event, values = window.read()
+# def movePlayer(direction):
+#     if direction == 'Up':
+#         if (int(_VARS['playerPos'][1] - cellSize) >= 0):
+#             return _VARS['playerPos'][1] - cellSize
+#     elif direction == 'Down':
+#         if (int(_VARS['playerPos'][1] + cellSize) < 400):
+#             return _VARS['playerPos'][1] + cellSize
+#     elif direction == 'Left':
+#         if (int(_VARS['playerPos'][0] - cellSize) >= 0):
+#             return _VARS['playerPos'][0] - cellSize
+#     elif direction == 'Right':
+#         if (int(_VARS['playerPos'][0] + cellSize < 400)):
+#             return _VARS['playerPos'][0] + cellSize
+
+
+# INIT :
+layout = [[sg.Canvas(size=(_VARS['gridSize'], _VARS['gridSize']),
+                     background_color='white',
+                     key='canvas')],
+          [sg.Exit(font=AppFont)]]
+
+_VARS['window'] = sg.Window('GridMaker', layout, resizable=True, finalize=True,
+                            return_keyboard_events=True)
+_VARS['canvas'] = _VARS['window']['canvas']
+drawGrid()
+drawCell(_VARS['playerPos'][0], _VARS['playerPos'][1])
+placeCells()
+
+
+while True:             # Event Loop
+    event, values = _VARS['window'].read()
     if event in (None, 'Exit'):
         break
-    # Filter key press OSX :
-    move = checkEvents(event)
-    print(move)
+    # Filter key press
+    if checkEvents(event) == 'Up':        
+        if (int(_VARS['playerPos'][1] - cellSize) >= 0):
+            _VARS['playerPos'][1] = _VARS['playerPos'][1] - cellSize
+    elif checkEvents(event) == 'Down':
+        if (int(_VARS['playerPos'][1] + cellSize) < 400):
+            _VARS['playerPos'][1] = _VARS['playerPos'][1] + cellSize
+    elif checkEvents(event) == 'Left':
+        if (int(_VARS['playerPos'][0] - cellSize) >= 0):
+            _VARS['playerPos'][0] = _VARS['playerPos'][0] - cellSize
+    elif checkEvents(event) == 'Right':
+        if (int(_VARS['playerPos'][0] + cellSize < 400)):
+            _VARS['playerPos'][0] = _VARS['playerPos'][0] + cellSize
 
-window.close()
+    # _VARS['playerPos'][1] == movePlayer(checkEvents(event))
+    # _VARS['playerPos'][0] == movePlayer(checkEvents(event))
+
+    # Clear canvas, draw grid and cells
+    _VARS['canvas'].TKCanvas.delete("all")
+    drawGrid()
+    drawCell(_VARS['playerPos'][0], _VARS['playerPos'][1])
+    print(_VARS['playerPos'])
+    placeCells()
+_VARS['window'].close()

@@ -60,6 +60,11 @@ def checkEvents(event):
             move = 'Right'
     return move
 
+    # Move
+    def movePlayer(direction):
+        pass
+        # if direction X do y
+
 
 # INIT :
 layout = [[sg.Canvas(size=(_VARS['gridSize'], _VARS['gridSize']),
@@ -81,8 +86,9 @@ while True:             # Event Loop
     if event in (None, 'Exit'):
         break
     # Filter key press
+
     if checkEvents(event) == 'Up':
-        _VARS['playerPos'][1] = _VARS['playerPos'][1] - 40        
+        _VARS['playerPos'][1] = _VARS['playerPos'][1] - 40
     elif checkEvents(event) == 'Down':
         _VARS['playerPos'][1] = _VARS['playerPos'][1] + 40
     elif checkEvents(event) == 'Left':

@@ -80,17 +80,17 @@ while True:             # Event Loop
         break
     # Filter key press
     if checkEvents(event) == 'Up':
-        if (_VARS['playerPos'][1] - 40 >= 0):
-            _VARS['playerPos'][1] = _VARS['playerPos'][1] - 40
+        if (int(_VARS['playerPos'][1] - cellSize) >= 0):
+            _VARS['playerPos'][1] = _VARS['playerPos'][1] - cellSize
     elif checkEvents(event) == 'Down':
-        if (_VARS['playerPos'][1] + 40 < 400):        
-            _VARS['playerPos'][1] = _VARS['playerPos'][1] + 40
+        if (int(_VARS['playerPos'][1] + cellSize) < 400):
+            _VARS['playerPos'][1] = _VARS['playerPos'][1] + cellSize
     elif checkEvents(event) == 'Left':
-        if (_VARS['playerPos'][0] - 40 >= 0):
-            _VARS['playerPos'][0] = _VARS['playerPos'][0] - 40
+        if (int(_VARS['playerPos'][0] - cellSize) >= 0):
+            _VARS['playerPos'][0] = _VARS['playerPos'][0] - cellSize
     elif checkEvents(event) == 'Right':
-        if (_VARS['playerPos'][0] + 40 < 400):
-            _VARS['playerPos'][0] = _VARS['playerPos'][0] + 40
+        if (int(_VARS['playerPos'][0] + cellSize < 400)):
+            _VARS['playerPos'][0] = _VARS['playerPos'][0] + cellSize
 
     # Clear canvas, draw grid and cells
     _VARS['canvas'].TKCanvas.delete("all")
