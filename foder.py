@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 import numpy as np
-
+import math
 AppFont = 'Any 16'
 sg.theme('DarkGrey5')
 _VARS = {'cellCount': 6, 'gridSize': 400, 'canvas': False, 'window': False,
@@ -8,12 +8,12 @@ _VARS = {'cellCount': 6, 'gridSize': 400, 'canvas': False, 'window': False,
 # cellMAP = np.random.randint(2, size=(_VARS['cellCount'], _VARS['cellCount']))
 cellSize = _VARS['gridSize']/_VARS['cellCount']
 
-cellMAP = np.array([[0, 0, 0, 1, 0, 0],
+cellMAP = np.array([[0, 1, 0, 0, 0, 0],
                     [0, 0, 0, 1, 0, 0],
+                    [0, 0, 0, 0, 0, 0],
+                    [0, 1, 0, 1, 0, 1],
                     [0, 0, 0, 1, 0, 0],
-                    [0, 0, 0, 1, 0, 0],
-                    [0, 0, 0, 1, 0, 0],
-                    [0, 0, 0, 1, 0, 0]])
+                    [0, 0, 0, 0, 0, 0]])
 
 # METHODS:
 
@@ -86,24 +86,50 @@ while True:             # Event Loop
     event, values = _VARS['window'].read()
     if event in (None, 'Exit'):
         break
+
+    # xPos = int(_VARS['playerPos'][0]/cellSize)
+    # yPos = int(_VARS['playerPos'][1]/cellSize)
+    # print(f"playerPos: {xPos},{yPos}") 
+    # print(f"playerPos: {_VARS['playerPos'][0]/cellSize},{_VARS['playerPos'][1]/cellSize}") 
+    
+
+
     # Filter key press
+    # Todo: cases for each:
+    # Buggie...
+    # UP XXX
+    # Down
+    # left
+    # right
+    # Note the math.ceil
+    xPos = int(math.ceil(_VARS['playerPos'][0]/cellSize))
+    yPos = int(math.ceil(_VARS['playerPos'][1]/cellSize))
+    print(f"prev playerPos: {xPos},{yPos}") 
+
     if checkEvents(event) == 'Up':
-        if (int(_VARS['playerPos'][1] - cellSize) >= 0):
-            _VARS['playerPos'][1] = _VARS['playerPos'][1] - cellSize
+        if int(_VARS['playerPos'][1] - cellSize) >= 0:
+            if cellMAP[yPos-1][xPos] != 1:
+                _VARS['playerPos'][1] = _VARS['playerPos'][1] - cellSize
     elif checkEvents(event) == 'Down':
-        if (int(_VARS['playerPos'][1] + cellSize) < 400):
-            _VARS['playerPos'][1] = _VARS['playerPos'][1] + cellSize
+        if int(_VARS['playerPos'][1] + cellSize) < 400:
+            if cellMAP[yPos+1][xPos] != 1:
+                _VARS['playerPos'][1] = _VARS['playerPos'][1] + cellSize
     elif checkEvents(event) == 'Left':
-        if (int(_VARS['playerPos'][0] - cellSize) >= 0):
-            _VARS['playerPos'][0] = _VARS['playerPos'][0] - cellSize
+        if int(_VARS['playerPos'][0] - cellSize) >= 0:
+            if cellMAP[yPos][xPos-1] != 1:
+                _VARS['playerPos'][0] = _VARS['playerPos'][0] - cellSize
     elif checkEvents(event) == 'Right':
-        if (int(_VARS['playerPos'][0] + cellSize < 400)):
-            _VARS['playerPos'][0] = _VARS['playerPos'][0] + cellSize
+        if int(_VARS['playerPos'][0] + cellSize) < 400:
+            if cellMAP[yPos][xPos+1] != 1:
+                _VARS['playerPos'][0] = _VARS['playerPos'][0] + cellSize
 
     # Clear canvas, draw grid and cells
     _VARS['canvas'].TKCanvas.delete("all")
     drawGrid()
     drawCell(_VARS['playerPos'][0], _VARS['playerPos'][1], 'TOMATO')
-    print(_VARS['playerPos'])
+    # Pseudo Code:
+    # if position in array look forward up down left right not 1
+    # move
+
     placeCells()
 _VARS['window'].close()
