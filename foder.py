@@ -3,7 +3,7 @@ import numpy as np
 
 AppFont = 'Any 16'
 sg.theme('DarkGrey5')
-_VARS = {'cellCount': 10, 'gridSize': 400, 'canvas': False, 'window': False,
+_VARS = {'cellCount': 6, 'gridSize': 400, 'canvas': False, 'window': False,
          'playerPos': [0, 0]}
 # cellMAP = np.random.randint(2, size=(_VARS['cellCount'], _VARS['cellCount']))
 cellSize = _VARS['gridSize']/_VARS['cellCount']
@@ -16,6 +16,7 @@ cellMAP = np.array([[0, 0, 0, 1, 0, 0],
                     [0, 0, 0, 1, 0, 0]])
 
 # METHODS:
+
 
 def drawGrid():
     cells = _VARS['cellCount']
@@ -30,10 +31,10 @@ def drawGrid():
             fill='BLACK', width=1)
 
 
-def drawCell(x, y):
+def drawCell(x, y, color='GREY'):
     _VARS['canvas'].TKCanvas.create_rectangle(
         x, y, x + cellSize, y + cellSize,
-        outline='BLACK', fill='GREY', width=1)
+        outline='BLACK', fill=color, width=1)
 
 
 def placeCells():
@@ -67,21 +68,6 @@ def checkEvents(event):
     return move
 
 
-# def movePlayer(direction):
-#     if direction == 'Up':
-#         if (int(_VARS['playerPos'][1] - cellSize) >= 0):
-#             return _VARS['playerPos'][1] - cellSize
-#     elif direction == 'Down':
-#         if (int(_VARS['playerPos'][1] + cellSize) < 400):
-#             return _VARS['playerPos'][1] + cellSize
-#     elif direction == 'Left':
-#         if (int(_VARS['playerPos'][0] - cellSize) >= 0):
-#             return _VARS['playerPos'][0] - cellSize
-#     elif direction == 'Right':
-#         if (int(_VARS['playerPos'][0] + cellSize < 400)):
-#             return _VARS['playerPos'][0] + cellSize
-
-
 # INIT :
 layout = [[sg.Canvas(size=(_VARS['gridSize'], _VARS['gridSize']),
                      background_color='white',
@@ -92,7 +78,7 @@ _VARS['window'] = sg.Window('GridMaker', layout, resizable=True, finalize=True,
                             return_keyboard_events=True)
 _VARS['canvas'] = _VARS['window']['canvas']
 drawGrid()
-drawCell(_VARS['playerPos'][0], _VARS['playerPos'][1])
+drawCell(_VARS['playerPos'][0], _VARS['playerPos'][1], 'TOMATO')
 placeCells()
 
 
@@ -101,7 +87,7 @@ while True:             # Event Loop
     if event in (None, 'Exit'):
         break
     # Filter key press
-    if checkEvents(event) == 'Up':        
+    if checkEvents(event) == 'Up':
         if (int(_VARS['playerPos'][1] - cellSize) >= 0):
             _VARS['playerPos'][1] = _VARS['playerPos'][1] - cellSize
     elif checkEvents(event) == 'Down':
@@ -114,13 +100,10 @@ while True:             # Event Loop
         if (int(_VARS['playerPos'][0] + cellSize < 400)):
             _VARS['playerPos'][0] = _VARS['playerPos'][0] + cellSize
 
-    # _VARS['playerPos'][1] == movePlayer(checkEvents(event))
-    # _VARS['playerPos'][0] == movePlayer(checkEvents(event))
-
     # Clear canvas, draw grid and cells
     _VARS['canvas'].TKCanvas.delete("all")
     drawGrid()
-    drawCell(_VARS['playerPos'][0], _VARS['playerPos'][1])
+    drawCell(_VARS['playerPos'][0], _VARS['playerPos'][1], 'TOMATO')
     print(_VARS['playerPos'])
     placeCells()
 _VARS['window'].close()
