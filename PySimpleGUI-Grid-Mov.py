@@ -60,11 +60,6 @@ def checkEvents(event):
             move = 'Right'
     return move
 
-    # Move
-    def movePlayer(direction):
-        pass
-        # if direction X do y
-
 
 # INIT :
 layout = [[sg.Canvas(size=(_VARS['gridSize'], _VARS['gridSize']),

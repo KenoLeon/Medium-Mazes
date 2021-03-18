@@ -87,24 +87,11 @@ while True:             # Event Loop
     if event in (None, 'Exit'):
         break
 
-    # xPos = int(_VARS['playerPos'][0]/cellSize)
-    # yPos = int(_VARS['playerPos'][1]/cellSize)
-    # print(f"playerPos: {xPos},{yPos}") 
-    # print(f"playerPos: {_VARS['playerPos'][0]/cellSize},{_VARS['playerPos'][1]/cellSize}") 
-    
-
-
     # Filter key press
-    # Todo: cases for each:
-    # Buggie...
-    # UP XXX
-    # Down
-    # left
-    # right
     # Note the math.ceil
     xPos = int(math.ceil(_VARS['playerPos'][0]/cellSize))
     yPos = int(math.ceil(_VARS['playerPos'][1]/cellSize))
-    print(f"prev playerPos: {xPos},{yPos}") 
+    print(f"prev playerPos: {xPos},{yPos}")
 
     if checkEvents(event) == 'Up':
         if int(_VARS['playerPos'][1] - cellSize) >= 0:
@@ -127,9 +114,6 @@ while True:             # Event Loop
     _VARS['canvas'].TKCanvas.delete("all")
     drawGrid()
     drawCell(_VARS['playerPos'][0], _VARS['playerPos'][1], 'TOMATO')
-    # Pseudo Code:
-    # if position in array look forward up down left right not 1
-    # move
 
     placeCells()
 _VARS['window'].close()

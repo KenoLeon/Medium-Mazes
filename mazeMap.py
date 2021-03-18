@@ -1,30 +1,19 @@
 import PySimpleGUI as sg
 import numpy as np
-
-
+import math
 AppFont = 'Any 16'
 sg.theme('DarkGrey5')
-_VARS = {'cellCount': 10, 'gridSize': 400, 'canvas': False, 'window': False,
-         'playerPos': False}
+_VARS = {'cellCount': 6, 'gridSize': 400, 'canvas': False, 'window': False,
+         'playerPos': [0, 0]}
 # cellMAP = np.random.randint(2, size=(_VARS['cellCount'], _VARS['cellCount']))
-cellMAP = np.zeros((_VARS['cellCount'], _VARS['cellCount']), dtype=int)
 cellSize = _VARS['gridSize']/_VARS['cellCount']
-_VARS['playerPos'] = [0, 0]
-print(repr(cellMAP))
-# mazeMap
-cellMAP = np.array([[0, 0, 0, 1, 0, 0],
-                    [0, 0, 0, 1, 0, 0],
-                    [0, 0, 0, 1, 0, 0],
-                    [0, 0, 0, 1, 0, 0],
-                    [0, 0, 0, 1, 0, 0],
-                    [0, 0, 0, 1, 0, 0]])
 
-# array([[0, 0, 0, 1, 0, 0],
-#        [0, 0, 0, 1, 0, 0],
-#        [0, 0, 0, 1, 0, 0],
-#        [0, 0, 0, 1, 0, 0],
-#        [0, 0, 0, 1, 0, 0],
-#        [0, 0, 0, 1, 0, 0]])
+cellMAP = np.array([[0, 1, 0, 0, 0, 0],
+                    [0, 0, 0, 1, 0, 0],
+                    [0, 0, 0, 0, 0, 0],
+                    [0, 1, 0, 1, 0, 1],
+                    [0, 0, 0, 1, 0, 0],
+                    [0, 0, 0, 0, 0, 0]])
 
 # METHODS:
 
@@ -42,10 +31,10 @@ def drawGrid():
             fill='BLACK', width=1)
 
 
-def drawCell(x, y):
+def drawCell(x, y, color='GREY'):
     _VARS['canvas'].TKCanvas.create_rectangle(
         x, y, x + cellSize, y + cellSize,
-        outline='BLACK', fill='GREY', width=1)
+        outline='BLACK', fill=color, width=1)
 
 
 def placeCells():
@@ -53,6 +42,30 @@ def placeCells():
         for column in range(cellMAP.shape[1]):
             if(cellMAP[column][row] == 1):
                 drawCell((cellSize*row), (cellSize*column))
+
+
+def checkEvents(event):
+    move = ''
+    if len(event) == 1:
+        if ord(event) == 63232:  # UP
+            move = 'Up'
+        elif ord(event) == 63233:  # DOWN
+            move = 'Down'
+        elif ord(event) == 63234:  # LEFT
+            move = 'Left'
+        elif ord(event) == 63235:  # RIGHT
+            move = 'Right'
+    # Filter key press Windows :
+    else:
+        if event.startswith('Up'):
+            move = 'Up'
+        elif event.startswith('Down'):
+            move = 'Down'
+        elif event.startswith('Left'):
+            move = 'Left'
+        elif event.startswith('Right'):
+            move = 'Right'
+    return move
 
 
 # INIT :
@@ -65,7 +78,7 @@ _VARS['window'] = sg.Window('GridMaker', layout, resizable=True, finalize=True,
                             return_keyboard_events=True)
 _VARS['canvas'] = _VARS['window']['canvas']
 drawGrid()
-drawCell(_VARS['playerPos'][0], _VARS['playerPos'][1])
+drawCell(_VARS['playerPos'][0], _VARS['playerPos'][1], 'TOMATO')
 placeCells()
 
 
@@ -73,37 +86,34 @@ while True:             # Event Loop
     event, values = _VARS['window'].read()
     if event in (None, 'Exit'):
         break
+
     # Filter key press
-    if len(event) == 1:
-        if ord(event) == 63232:  # UP
-            print('UP')
-            if (_VARS['playerPos'][1] - cellSize >= 0):
+    # Note the math.ceil
+    xPos = int(math.ceil(_VARS['playerPos'][0]/cellSize))
+    yPos = int(math.ceil(_VARS['playerPos'][1]/cellSize))
+    print(f"prev playerPos: {xPos},{yPos}")
+
+    if checkEvents(event) == 'Up':
+        if int(_VARS['playerPos'][1] - cellSize) >= 0:
+            if cellMAP[yPos-1][xPos] != 1:
                 _VARS['playerPos'][1] = _VARS['playerPos'][1] - cellSize
-            else:
-                print('WALL')
-        elif ord(event) == 63233:  # DOWN
-            print('DOWN')
-            if (_VARS['playerPos'][1] + cellSize < 400):
+    elif checkEvents(event) == 'Down':
+        if int(_VARS['playerPos'][1] + cellSize) < 400:
+            if cellMAP[yPos+1][xPos] != 1:
                 _VARS['playerPos'][1] = _VARS['playerPos'][1] + cellSize
-            else:
-                print('WALL')
-        elif ord(event) == 63234:  # LEFT
-            print('LEFT')
-            if (_VARS['playerPos'][0] - cellSize >= 0):
+    elif checkEvents(event) == 'Left':
+        if int(_VARS['playerPos'][0] - cellSize) >= 0:
+            if cellMAP[yPos][xPos-1] != 1:
                 _VARS['playerPos'][0] = _VARS['playerPos'][0] - cellSize
-            else:
-                print('WALL')
-        elif ord(event) == 63235:  # RIGHT
-            print('RIGHT')
-            if (_VARS['playerPos'][0] + cellSize < 400):
+    elif checkEvents(event) == 'Right':
+        if int(_VARS['playerPos'][0] + cellSize) < 400:
+            if cellMAP[yPos][xPos+1] != 1:
                 _VARS['playerPos'][0] = _VARS['playerPos'][0] + cellSize
-            else:
-                print('WALL')
-    print(_VARS['playerPos'])
 
     # Clear canvas, draw grid and cells
     _VARS['canvas'].TKCanvas.delete("all")
     drawGrid()
+    drawCell(_VARS['playerPos'][0], _VARS['playerPos'][1], 'TOMATO')
+
     placeCells()
-    drawCell(_VARS['playerPos'][0], _VARS['playerPos'][1])
 _VARS['window'].close()
