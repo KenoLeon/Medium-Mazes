@@ -72,7 +72,7 @@ def checkEvents(event):
 layout = [[sg.Canvas(size=(_VARS['gridSize'], _VARS['gridSize']),
                      background_color='white',
                      key='canvas')],
-          [sg.Exit(font=AppFont)]]
+          [sg.Exit(font=AppFont), sg.Text('', key='-exit-', font=AppFont, size=(20, 4))]]
 
 _VARS['window'] = sg.Window('GridMaker', layout, resizable=True, finalize=True,
                             return_keyboard_events=True)
@@ -117,4 +117,11 @@ while True:             # Event Loop
     drawCell(_VARS['exit'][0]*cellSize, _VARS['exit'][1]*cellSize, 'Black')
     drawCell(_VARS['playerPos'][0], _VARS['playerPos'][1], 'TOMATO')
     placeCells()
+
+    # Check for Exit:
+    xPos = int(math.ceil(_VARS['playerPos'][0]/cellSize))
+    yPos = int(math.ceil(_VARS['playerPos'][1]/cellSize))
+    if [xPos, yPos] == _VARS['exit']:
+        _VARS['window']['-exit-'].update(' Found the exit !')
+
 _VARS['window'].close()
