@@ -1,40 +1,34 @@
 import PySimpleGUI as sg
 import numpy as np
 import math
+import random
+
+
 AppFont = 'Any 16'
 sg.theme('DarkGrey5')
 _VARS = {'cellCount': 6, 'gridSize': 400, 'canvas': False, 'window': False,
          'playerPos': [0, 0], 'exit': [5, 5]}
-starterMap = np.zeros((_VARS['cellCount'], _VARS['cellCount']), dtype=int)
-# print(repr(starterMap))
-
-# randomCellMap = np.random.randint(
-#     2, size=(_VARS['cellCount'], _VARS['cellCount']))
-
 cellSize = _VARS['gridSize']/_VARS['cellCount']
 
-# cellMAP = np.array([[0, 0, 0, 0, 0, 0],
-#                     [0, 1, 0, 1, 0, 0],
-#                     [0, 0, 0, 0, 0, 0],
-#                     [0, 1, 0, 1, 0, 1],
-#                     [1, 1, 0, 1, 1, 0],
-#                     [0, 0, 0, 0, 0, 0]])
 
-starterMap = np.array([[0, 0, 0, 0, 0, 0],
-                       [0, 0, 0, 0, 0, 0],
-                       [0, 0, 0, 0, 0, 0],
-                       [0, 0, 0, 0, 0, 0],
-                       [0, 0, 0, 0, 0, 0],
-                       [0, 0, 0, 0, 0, 0]])
-
+def makeMaze(dimX, dimY):
+    starterMap = np.zeros((dimX, dimY), dtype=int)
+    randRow = random.randint(1, dimX)
+    randColumn = random.randint(1, dimY)
+    starterMap[randRow-1:randRow] = 1
+    starterMap[randRow-1][random.randint(0, dimY-1)] = 0
+    starterMap[randRow-1][random.randint(0, dimY-1)] = 0
+    starterMap[:, randColumn-1] = 1
+    starterMap[random.randint(0, dimX-1)][randColumn-1] = 0
+    starterMap[random.randint(0, dimX-1)][randColumn-1] = 0
+    return starterMap
 
 
+cellMAP = makeMaze(_VARS['cellCount'],_VARS['cellCount'],)
 
-cellMAP = starterMap
 
-# cellMAP = np.random.randint(2, size=(_VARS['cellCount'], _VARS['cellCount']))
-# cellMAP[0][0] = 0
-# cellMAP[5][5] = 0
+cellMAP[0][0] = 0
+cellMAP[5][5] = 0
 
 # METHODS:
 

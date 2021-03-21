@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "/opt/miniconda3/bin/python"
+    "python.pythonPath": "C:\\Users\\keno\\Anaconda3\\python.exe",
+    "editor.tabCompletion": "on"
 }
