@@ -4,14 +4,33 @@ import math
 import random
 
 
+# TODO:
+# Add button for map reload XXX
+# Add button call XXX
+# remake Map:
+# Add global cellMAP
+# Replace CellMAPS with global
+
 AppFont = 'Any 16'
 sg.theme('DarkGrey5')
-_VARS = {'cellCount': 6, 'gridSize': 400, 'canvas': False, 'window': False,
-         'playerPos': [0, 0], 'exit': [5, 5]}
+_VARS = {'cellCount': 8, 'gridSize': 400, 'canvas': False, 'window': False,
+         'playerPos': [0, 0], 'cellMAP': False}
 cellSize = _VARS['gridSize']/_VARS['cellCount']
+exitPos = [_VARS['cellCount']-1, _VARS['cellCount']-1]
+print(exitPos)
 
 
 def makeMaze(dimX, dimY):
+    """makes a maze by adding walls and holes in walls.
+
+    Adds random vertical and horizontal lines and then cuts holes randomly.
+    Mostly works, but not perfect.
+
+    """
+    # TODO:
+    # Special case: exit entrance need to see if the surrounding cells
+    # are at least one empty, else make a hole.
+
     starterMap = np.zeros((dimX, dimY), dtype=int)
     randRow = random.randint(1, dimX)
     randColumn = random.randint(1, dimY)
@@ -21,14 +40,13 @@ def makeMaze(dimX, dimY):
     starterMap[:, randColumn-1] = 1
     starterMap[random.randint(0, dimX-1)][randColumn-1] = 0
     starterMap[random.randint(0, dimX-1)][randColumn-1] = 0
+    starterMap[0][0] = 0
+    starterMap[dimX-1][dimY-1] = 0
     return starterMap
 
 
-cellMAP = makeMaze(_VARS['cellCount'],_VARS['cellCount'],)
+_VARS['cellMAP'] = makeMaze(_VARS['cellCount'], _VARS['cellCount'])
 
-
-cellMAP[0][0] = 0
-cellMAP[5][5] = 0
 
 # METHODS:
 
@@ -53,9 +71,9 @@ def drawCell(x, y, color='GREY'):
 
 
 def placeCells():
-    for row in range(cellMAP.shape[0]):
-        for column in range(cellMAP.shape[1]):
-            if(cellMAP[column][row] == 1):
+    for row in range(_VARS['cellMAP'].shape[0]):
+        for column in range(_VARS['cellMAP'].shape[1]):
+            if(_VARS['cellMAP'][column][row] == 1):
                 drawCell((cellSize*row), (cellSize*column))
 
 
@@ -83,19 +101,24 @@ def checkEvents(event):
     return move
 
 
+def newMaze():
+    pass
+
+
 # INIT :
 layout = [[sg.Canvas(size=(_VARS['gridSize'], _VARS['gridSize']),
                      background_color='white',
                      key='canvas')],
           [sg.Exit(font=AppFont),
-           sg.Text('', key='-exit-', font=AppFont, size=(15, 1))]]
+           sg.Text('', key='-exit-', font=AppFont, size=(15, 1)),
+           sg.Button('NewMaze', font=AppFont)]]
 
 _VARS['window'] = sg.Window('GridMaker', layout, resizable=True, finalize=True,
                             return_keyboard_events=True)
 _VARS['canvas'] = _VARS['window']['canvas']
 drawGrid()
 drawCell(_VARS['playerPos'][0], _VARS['playerPos'][1], 'TOMATO')
-drawCell(_VARS['exit'][0]*cellSize, _VARS['exit'][1]*cellSize, 'Black')
+drawCell(exitPos[0]*cellSize, exitPos[1]*cellSize, 'Black')
 placeCells()
 
 
@@ -104,7 +127,10 @@ while True:             # Event Loop
     if event in (None, 'Exit'):
         break
 
-    # Filter key press
+    if event == 'NewMaze':
+        _VARS['playerPos'] = [0, 0]
+        _VARS['cellMAP'] = makeMaze(_VARS['cellCount'], _VARS['cellCount'])            
+    # # Filter key press
     # Note the math.ceil
     xPos = int(math.ceil(_VARS['playerPos'][0]/cellSize))
     yPos = int(math.ceil(_VARS['playerPos'][1]/cellSize))
@@ -112,32 +138,33 @@ while True:             # Event Loop
 
     if checkEvents(event) == 'Up':
         if int(_VARS['playerPos'][1] - cellSize) >= 0:
-            if cellMAP[yPos-1][xPos] != 1:
+            if _VARS['cellMAP'][yPos-1][xPos] != 1:
                 _VARS['playerPos'][1] = _VARS['playerPos'][1] - cellSize
     elif checkEvents(event) == 'Down':
         if int(_VARS['playerPos'][1] + cellSize) < 400:
-            if cellMAP[yPos+1][xPos] != 1:
+            if _VARS['cellMAP'][yPos+1][xPos] != 1:
                 _VARS['playerPos'][1] = _VARS['playerPos'][1] + cellSize
     elif checkEvents(event) == 'Left':
         if int(_VARS['playerPos'][0] - cellSize) >= 0:
-            if cellMAP[yPos][xPos-1] != 1:
+            if _VARS['cellMAP'][yPos][xPos-1] != 1:
                 _VARS['playerPos'][0] = _VARS['playerPos'][0] - cellSize
     elif checkEvents(event) == 'Right':
         if int(_VARS['playerPos'][0] + cellSize) < 400:
-            if cellMAP[yPos][xPos+1] != 1:
+            if _VARS['cellMAP'][yPos][xPos+1] != 1:
                 _VARS['playerPos'][0] = _VARS['playerPos'][0] + cellSize
 
     # Clear canvas, draw grid and cells
     _VARS['canvas'].TKCanvas.delete("all")
     drawGrid()
-    drawCell(_VARS['exit'][0]*cellSize, _VARS['exit'][1]*cellSize, 'Black')
+    drawCell(exitPos[0]*cellSize, exitPos[1]*cellSize, 'Black')
     drawCell(_VARS['playerPos'][0], _VARS['playerPos'][1], 'TOMATO')
     placeCells()
 
     # Check for Exit:
     xPos = int(math.ceil(_VARS['playerPos'][0]/cellSize))
     yPos = int(math.ceil(_VARS['playerPos'][1]/cellSize))
-    if [xPos, yPos] == _VARS['exit']:
-        _VARS['window']['-exit-'].update('Found the exit !')
-
+    if [xPos, yPos] == exitPos:
+        _VARS['window']['-exit-'].update('Found the exit !')    
+    else:
+        _VARS['window']['-exit-'].update('')
 _VARS['window'].close()
