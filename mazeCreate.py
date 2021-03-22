@@ -4,13 +4,6 @@ import math
 import random
 
 
-# TODO:
-# Add button for map reload XXX
-# Add button call XXX
-# remake Map:
-# Add global cellMAP
-# Replace CellMAPS with global
-
 AppFont = 'Any 16'
 sg.theme('DarkGrey5')
 _VARS = {'cellCount': 8, 'gridSize': 400, 'canvas': False, 'window': False,
@@ -27,21 +20,27 @@ def makeMaze(dimX, dimY):
     Mostly works, but not perfect.
 
     """
-    # TODO:
-    # Special case: exit entrance need to see if the surrounding cells
-    # are at least one empty, else make a hole.
 
+    # Make a starter gir of zeros:
     starterMap = np.zeros((dimX, dimY), dtype=int)
-    randRow = random.randint(1, dimX)
-    randColumn = random.randint(1, dimY)
-    starterMap[randRow-1:randRow] = 1
-    starterMap[randRow-1][random.randint(0, dimY-1)] = 0
-    starterMap[randRow-1][random.randint(0, dimY-1)] = 0
-    starterMap[:, randColumn-1] = 1
-    starterMap[random.randint(0, dimX-1)][randColumn-1] = 0
-    starterMap[random.randint(0, dimX-1)][randColumn-1] = 0
+    # add rows and columns:
+    for x in range(2):
+        randRow = random.randint(1, dimX)
+        randColumn = random.randint(1, dimY)
+        starterMap[randRow-1:randRow] = 1
+        starterMap[:, randColumn-1] = 1
+        # poke holes in said rows and columns:
+        for x in range(3):
+            starterMap[randRow-1][random.randint(0, dimY-1)] = 0
+            starterMap[random.randint(0, dimX-1)][randColumn-1] = 0
+    # Add blank cells fro entrance,exit and around them:
     starterMap[0][0] = 0
+    starterMap[0][1] = 0
+    starterMap[1][0] = 0
     starterMap[dimX-1][dimY-1] = 0
+    starterMap[dimX-1][dimY-2] = 0
+    starterMap[dimX-2][dimY-1] = 0
+    starterMap[dimX-2][dimY-2] = 0
     return starterMap
 
 
@@ -101,10 +100,6 @@ def checkEvents(event):
     return move
 
 
-def newMaze():
-    pass
-
-
 # INIT :
 layout = [[sg.Canvas(size=(_VARS['gridSize'], _VARS['gridSize']),
                      background_color='white',
@@ -129,7 +124,7 @@ while True:             # Event Loop
 
     if event == 'NewMaze':
         _VARS['playerPos'] = [0, 0]
-        _VARS['cellMAP'] = makeMaze(_VARS['cellCount'], _VARS['cellCount'])            
+        _VARS['cellMAP'] = makeMaze(_VARS['cellCount'], _VARS['cellCount'])
     # # Filter key press
     # Note the math.ceil
     xPos = int(math.ceil(_VARS['playerPos'][0]/cellSize))
@@ -164,7 +159,7 @@ while True:             # Event Loop
     xPos = int(math.ceil(_VARS['playerPos'][0]/cellSize))
     yPos = int(math.ceil(_VARS['playerPos'][1]/cellSize))
     if [xPos, yPos] == exitPos:
-        _VARS['window']['-exit-'].update('Found the exit !')    
+        _VARS['window']['-exit-'].update('Found the exit !')
     else:
         _VARS['window']['-exit-'].update('')
 _VARS['window'].close()
