@@ -4,7 +4,7 @@ import numpy as np
 AppFont = 'Any 16'
 sg.theme('DarkGrey5')
 _VARS = {'cellCount': 10, 'gridSize': 400, 'canvas': False, 'window': False,
-         'playerPos': [40, 40]}
+         'playerPos': [0, 0]}
 cellMAP = np.random.randint(2, size=(_VARS['cellCount'], _VARS['cellCount']))
 cellSize = _VARS['gridSize']/_VARS['cellCount']
 
@@ -39,6 +39,7 @@ def placeCells():
 
 
 def checkEvents(event):
+    move = ''
     if len(event) == 1:
         if ord(event) == 63232:  # UP
             move = 'Up'
@@ -81,7 +82,6 @@ while True:             # Event Loop
     if event in (None, 'Exit'):
         break
     # Filter key press
-
     if checkEvents(event) == 'Up':
         _VARS['playerPos'][1] = _VARS['playerPos'][1] - 40
     elif checkEvents(event) == 'Down':

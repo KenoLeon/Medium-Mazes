@@ -16,7 +16,7 @@ cellSize = _VARS['gridSize']/_VARS['cellCount']
 #  [1 1 0 1 0 0 1 0]
 #  [1 1 0 1 0 0 1 0]]
 
-print(cellMAP)
+# print(cellMAP)
 # METHODS:
 
 

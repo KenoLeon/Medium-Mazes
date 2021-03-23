@@ -41,6 +41,7 @@ def makeMaze(dimX, dimY):
     starterMap[dimX-1][dimY-2] = 0
     starterMap[dimX-2][dimY-1] = 0
     starterMap[dimX-2][dimY-2] = 0
+    print (starterMap)
     return starterMap
 
 
