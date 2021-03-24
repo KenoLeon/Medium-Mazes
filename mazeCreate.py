@@ -6,7 +6,7 @@ import random
 
 AppFont = 'Any 16'
 sg.theme('DarkGrey5')
-_VARS = {'cellCount': 8, 'gridSize': 400, 'canvas': False, 'window': False,
+_VARS = {'cellCount': 15, 'gridSize': 400, 'canvas': False, 'window': False,
          'playerPos': [0, 0], 'cellMAP': False}
 cellSize = _VARS['gridSize']/_VARS['cellCount']
 exitPos = [_VARS['cellCount']-1, _VARS['cellCount']-1]
@@ -30,7 +30,7 @@ def makeMaze(dimX, dimY):
         starterMap[randRow-1:randRow] = 1
         starterMap[:, randColumn-1] = 1
         # poke holes in said rows and columns:
-        for x in range(3):
+        for x in range(4):
             starterMap[randRow-1][random.randint(0, dimY-1)] = 0
             starterMap[random.randint(0, dimX-1)][randColumn-1] = 0
     # Add blank cells fro entrance,exit and around them:
@@ -137,7 +137,7 @@ while True:             # Event Loop
             if _VARS['cellMAP'][yPos-1][xPos] != 1:
                 _VARS['playerPos'][1] = _VARS['playerPos'][1] - cellSize
     elif checkEvents(event) == 'Down':
-        if int(_VARS['playerPos'][1] + cellSize) < 400:
+        if int(_VARS['playerPos'][1] + cellSize) < 399:
             if _VARS['cellMAP'][yPos+1][xPos] != 1:
                 _VARS['playerPos'][1] = _VARS['playerPos'][1] + cellSize
     elif checkEvents(event) == 'Left':
@@ -145,7 +145,7 @@ while True:             # Event Loop
             if _VARS['cellMAP'][yPos][xPos-1] != 1:
                 _VARS['playerPos'][0] = _VARS['playerPos'][0] - cellSize
     elif checkEvents(event) == 'Right':
-        if int(_VARS['playerPos'][0] + cellSize) < 400:
+        if int(_VARS['playerPos'][0] + cellSize) < 399:
             if _VARS['cellMAP'][yPos][xPos+1] != 1:
                 _VARS['playerPos'][0] = _VARS['playerPos'][0] + cellSize
 

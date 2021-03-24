@@ -3,18 +3,34 @@ import numpy as np
 import math
 AppFont = 'Any 16'
 sg.theme('DarkGrey5')
-_VARS = {'cellCount': 6, 'gridSize': 400, 'canvas': False, 'window': False,
+_VARS = {'cellCount': 10, 'gridSize': 400, 'canvas': False, 'window': False,
          'playerPos': [0, 0]}
+cellMAP = np.zeros((_VARS['cellCount'], _VARS['cellCount']), dtype=int)
 # cellMAP = np.random.randint(2, size=(_VARS['cellCount'], _VARS['cellCount']))
 cellSize = _VARS['gridSize']/_VARS['cellCount']
 
-cellMAP = np.array([[0, 1, 0, 0, 0, 0],
-                    [0, 0, 0, 1, 0, 0],
-                    [0, 0, 0, 0, 0, 0],
-                    [0, 1, 0, 1, 0, 1],
-                    [0, 0, 0, 1, 0, 0],
-                    [0, 0, 0, 0, 0, 0]])
+print(repr(cellMAP))
 
+# cellMAP = np.array([[0, 1, 0, 0, 0, 0],
+#                     [0, 0, 0, 1, 0, 0],
+#                     [0, 0, 0, 0, 0, 0],
+#                     [0, 1, 0, 1, 0, 1],
+#                     [0, 0, 0, 1, 0, 0],
+#                     [0, 0, 0, 0, 0, 0]])
+
+
+cellMAP = np.array([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]])
 # METHODS:
 
 
@@ -93,12 +109,16 @@ while True:             # Event Loop
     yPos = int(math.ceil(_VARS['playerPos'][1]/cellSize))
     print(f"prev playerPos: {xPos},{yPos}")
 
+
+    # ADD in range 
+
+
     if checkEvents(event) == 'Up':
         if int(_VARS['playerPos'][1] - cellSize) >= 0:
             if cellMAP[yPos-1][xPos] != 1:
                 _VARS['playerPos'][1] = _VARS['playerPos'][1] - cellSize
     elif checkEvents(event) == 'Down':
-        if int(_VARS['playerPos'][1] + cellSize) < 400:
+        if int(_VARS['playerPos'][1] + cellSize) < 399:
             if cellMAP[yPos+1][xPos] != 1:
                 _VARS['playerPos'][1] = _VARS['playerPos'][1] + cellSize
     elif checkEvents(event) == 'Left':
@@ -106,10 +126,18 @@ while True:             # Event Loop
             if cellMAP[yPos][xPos-1] != 1:
                 _VARS['playerPos'][0] = _VARS['playerPos'][0] - cellSize
     elif checkEvents(event) == 'Right':
-        if int(_VARS['playerPos'][0] + cellSize) < 400:
-            if cellMAP[yPos][xPos+1] != 1:
+        if int(_VARS['playerPos'][0] + cellSize) < 399:
+            print(int(_VARS['playerPos'][0] + cellSize))
+            if cellMAP[yPos][xPos+1] != 1: 
                 _VARS['playerPos'][0] = _VARS['playerPos'][0] + cellSize
-
+    
+    xPos = int(math.ceil(_VARS['playerPos'][0]/cellSize))
+    yPos = int(math.ceil(_VARS['playerPos'][1]/cellSize))
+    print(f"playerPos: {xPos},{yPos}")
+    
+        
+    
+    # print("playerPos: ", _VARS['playerPos'][0], _VARS['playerPos'][1])
     # Clear canvas, draw grid and cells
     _VARS['canvas'].TKCanvas.delete("all")
     drawGrid()
