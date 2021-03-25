@@ -3,34 +3,35 @@ import numpy as np
 import math
 AppFont = 'Any 16'
 sg.theme('DarkGrey5')
-_VARS = {'cellCount': 12, 'gridSize': 400, 'canvas': False, 'window': False,
+_VARS = {'cellCount': 6, 'gridSize': 400, 'canvas': False, 'window': False,
          'playerPos': [0, 0]}
 cellMAP = np.zeros((_VARS['cellCount'], _VARS['cellCount']), dtype=int)
-# cellMAP = np.random.randint(2, size=(_VARS['cellCount'], _VARS['cellCount']))
 cellSize = _VARS['gridSize']/_VARS['cellCount']
 
-print(repr(cellMAP))
+# print(repr(cellMAP))
 
-# cellMAP = np.array([[0, 1, 0, 0, 0, 0],
-#                     [0, 0, 0, 1, 0, 0],
-#                     [0, 0, 0, 0, 0, 0],
-#                     [0, 1, 0, 1, 0, 1],
-#                     [0, 0, 0, 1, 0, 0],
-#                     [0, 0, 0, 0, 0, 0]])
+cellMAP = np.array([[0, 1, 0, 0, 0, 0],
+                    [0, 0, 0, 1, 0, 0],
+                    [0, 0, 0, 0, 0, 0],
+                    [0, 1, 0, 1, 0, 1],
+                    [0, 0, 0, 1, 0, 0],
+                    [0, 0, 0, 0, 0, 0]])
 
+# Want to try a bigger maze ? uncoment the following and
+# change the cellCount  to 12
 
-cellMAP = np.array([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]])
+# cellMAP = np.array([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+#                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+#                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+#                     [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+#                     [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+#                     [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+#                     [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+#                     [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+#                     [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+#                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+#                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+#                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]])
 # METHODS:
 
 
@@ -107,39 +108,31 @@ while True:             # Event Loop
     # Note the math.ceil
     xPos = int(math.ceil(_VARS['playerPos'][0]/cellSize))
     yPos = int(math.ceil(_VARS['playerPos'][1]/cellSize))
-    print(f"prev playerPos: {xPos},{yPos}")
-
-
-    # ADD in range 
-
+    # print(f"prev playerPos: {xPos},{yPos}")
 
     if checkEvents(event) == 'Up':
         if int(_VARS['playerPos'][1] - cellSize) >= 0:
             if cellMAP[yPos-1][xPos] != 1:
                 _VARS['playerPos'][1] = _VARS['playerPos'][1] - cellSize
+                # added a minus one to the gridSize to cover out of
+                # range bug when checking against the array,
+                # so instead of 400 it's 399
     elif checkEvents(event) == 'Down':
         if int(_VARS['playerPos'][1] + cellSize) < _VARS['gridSize']-1:
             if cellMAP[yPos+1][xPos] != 1:
                 _VARS['playerPos'][1] = _VARS['playerPos'][1] + cellSize
     elif checkEvents(event) == 'Left':
         if int(_VARS['playerPos'][0] - cellSize) >= 0:
-            print(cellMAP[yPos][xPos-1])
             if cellMAP[yPos][xPos-1] != 1:
                 _VARS['playerPos'][0] = _VARS['playerPos'][0] - cellSize
     elif checkEvents(event) == 'Right':
         if int(_VARS['playerPos'][0] + cellSize) < _VARS['gridSize']-1:
-            print(int(_VARS['playerPos'][0] + cellSize))
-            if cellMAP[yPos][xPos+1] != 1: 
+            if cellMAP[yPos][xPos+1] != 1:
                 _VARS['playerPos'][0] = _VARS['playerPos'][0] + cellSize
-    
+
     xPos = int(math.ceil(_VARS['playerPos'][0]/cellSize))
     yPos = int(math.ceil(_VARS['playerPos'][1]/cellSize))
-    print(f"playerPos: {xPos},{yPos}")
-    
-        
-    
-    # print("playerPos: ", _VARS['playerPos'][0], _VARS['playerPos'][1])
-    # Clear canvas, draw grid and cells
+    # print(f"playerPos: {xPos},{yPos}")
     _VARS['canvas'].TKCanvas.delete("all")
     drawGrid()
     drawCell(_VARS['playerPos'][0], _VARS['playerPos'][1], 'TOMATO')
