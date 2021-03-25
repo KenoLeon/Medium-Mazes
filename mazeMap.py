@@ -3,7 +3,7 @@ import numpy as np
 import math
 AppFont = 'Any 16'
 sg.theme('DarkGrey5')
-_VARS = {'cellCount': 10, 'gridSize': 400, 'canvas': False, 'window': False,
+_VARS = {'cellCount': 12, 'gridSize': 400, 'canvas': False, 'window': False,
          'playerPos': [0, 0]}
 cellMAP = np.zeros((_VARS['cellCount'], _VARS['cellCount']), dtype=int)
 # cellMAP = np.random.randint(2, size=(_VARS['cellCount'], _VARS['cellCount']))
@@ -118,15 +118,16 @@ while True:             # Event Loop
             if cellMAP[yPos-1][xPos] != 1:
                 _VARS['playerPos'][1] = _VARS['playerPos'][1] - cellSize
     elif checkEvents(event) == 'Down':
-        if int(_VARS['playerPos'][1] + cellSize) < 399:
+        if int(_VARS['playerPos'][1] + cellSize) < _VARS['gridSize']-1:
             if cellMAP[yPos+1][xPos] != 1:
                 _VARS['playerPos'][1] = _VARS['playerPos'][1] + cellSize
     elif checkEvents(event) == 'Left':
         if int(_VARS['playerPos'][0] - cellSize) >= 0:
+            print(cellMAP[yPos][xPos-1])
             if cellMAP[yPos][xPos-1] != 1:
                 _VARS['playerPos'][0] = _VARS['playerPos'][0] - cellSize
     elif checkEvents(event) == 'Right':
-        if int(_VARS['playerPos'][0] + cellSize) < 399:
+        if int(_VARS['playerPos'][0] + cellSize) < _VARS['gridSize']-1:
             print(int(_VARS['playerPos'][0] + cellSize))
             if cellMAP[yPos][xPos+1] != 1: 
                 _VARS['playerPos'][0] = _VARS['playerPos'][0] + cellSize
