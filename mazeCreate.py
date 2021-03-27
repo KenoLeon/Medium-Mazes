@@ -109,7 +109,7 @@ layout = [[sg.Canvas(size=(_VARS['gridSize'], _VARS['gridSize']),
            sg.Text('', key='-exit-', font=AppFont, size=(15, 1)),
            sg.Button('NewMaze', font=AppFont)]]
 
-_VARS['window'] = sg.Window('GridMaker', layout, resizable=True, finalize=True,
+_VARS['window'] = sg.Window('Random Puzzle Generator', layout, resizable=True, finalize=True,
                             return_keyboard_events=True)
 _VARS['canvas'] = _VARS['window']['canvas']
 drawGrid()
@@ -126,8 +126,8 @@ while True:             # Event Loop
     if event == 'NewMaze':
         _VARS['playerPos'] = [0, 0]
         _VARS['cellMAP'] = makeMaze(_VARS['cellCount'], _VARS['cellCount'])
-    # # Filter key press
-    #     
+    
+    # Filter key press
     xPos = int(math.ceil(_VARS['playerPos'][0]/cellSize))
     yPos = int(math.ceil(_VARS['playerPos'][1]/cellSize))    
 
@@ -162,5 +162,5 @@ while True:             # Event Loop
         _VARS['window']['-exit-'].update('Found the exit !')
     else:
         _VARS['window']['-exit-'].update('')
-        
+
 _VARS['window'].close()
