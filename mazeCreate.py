@@ -6,7 +6,7 @@ import random
 
 AppFont = 'Any 16'
 sg.theme('DarkGrey5')
-_VARS = {'cellCount': 15, 'gridSize': 400, 'canvas': False, 'window': False,
+_VARS = {'cellCount': 10, 'gridSize': 400, 'canvas': False, 'window': False,
          'playerPos': [0, 0], 'cellMAP': False}
 cellSize = _VARS['gridSize']/_VARS['cellCount']
 exitPos = [_VARS['cellCount']-1, _VARS['cellCount']-1]
@@ -41,7 +41,7 @@ def makeMaze(dimX, dimY):
     starterMap[dimX-1][dimY-2] = 0
     starterMap[dimX-2][dimY-1] = 0
     starterMap[dimX-2][dimY-2] = 0
-    print (starterMap)
+    # print (starterMap)
     return starterMap
 
 
@@ -127,17 +127,16 @@ while True:             # Event Loop
         _VARS['playerPos'] = [0, 0]
         _VARS['cellMAP'] = makeMaze(_VARS['cellCount'], _VARS['cellCount'])
     # # Filter key press
-    # Note the math.ceil
+    #     
     xPos = int(math.ceil(_VARS['playerPos'][0]/cellSize))
-    yPos = int(math.ceil(_VARS['playerPos'][1]/cellSize))
-    print(f"prev playerPos: {xPos},{yPos}")
+    yPos = int(math.ceil(_VARS['playerPos'][1]/cellSize))    
 
     if checkEvents(event) == 'Up':
         if int(_VARS['playerPos'][1] - cellSize) >= 0:
             if _VARS['cellMAP'][yPos-1][xPos] != 1:
                 _VARS['playerPos'][1] = _VARS['playerPos'][1] - cellSize
     elif checkEvents(event) == 'Down':
-        if int(_VARS['playerPos'][1] + cellSize) < 399:
+        if int(_VARS['playerPos'][1] + cellSize) < _VARS['gridSize']-1:
             if _VARS['cellMAP'][yPos+1][xPos] != 1:
                 _VARS['playerPos'][1] = _VARS['playerPos'][1] + cellSize
     elif checkEvents(event) == 'Left':
@@ -145,7 +144,7 @@ while True:             # Event Loop
             if _VARS['cellMAP'][yPos][xPos-1] != 1:
                 _VARS['playerPos'][0] = _VARS['playerPos'][0] - cellSize
     elif checkEvents(event) == 'Right':
-        if int(_VARS['playerPos'][0] + cellSize) < 399:
+        if int(_VARS['playerPos'][0] + cellSize) < _VARS['gridSize']-1:
             if _VARS['cellMAP'][yPos][xPos+1] != 1:
                 _VARS['playerPos'][0] = _VARS['playerPos'][0] + cellSize
 
@@ -163,4 +162,5 @@ while True:             # Event Loop
         _VARS['window']['-exit-'].update('Found the exit !')
     else:
         _VARS['window']['-exit-'].update('')
+        
 _VARS['window'].close()
