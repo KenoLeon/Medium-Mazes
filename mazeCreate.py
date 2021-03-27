@@ -10,7 +10,7 @@ _VARS = {'cellCount': 10, 'gridSize': 400, 'canvas': False, 'window': False,
          'playerPos': [0, 0], 'cellMAP': False}
 cellSize = _VARS['gridSize']/_VARS['cellCount']
 exitPos = [_VARS['cellCount']-1, _VARS['cellCount']-1]
-print(exitPos)
+
 
 
 def makeMaze(dimX, dimY):
